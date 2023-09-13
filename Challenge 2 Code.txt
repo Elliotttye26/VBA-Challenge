@@ -1,0 +1,105 @@
+Sub variables()
+    For Each ws In Worksheets
+        ws.Activate
+        
+        Range("I1").Value = "Ticker"
+        Range("J1").Value = "Yearly Change"
+        Range("K1").Value = "Percent Change"
+        Range("L1").Value = "Total Stock Volume"
+        
+        Columns("I:L").AutoFit
+    
+        'set variables for columns
+        Dim ticker As String
+        Dim time As Date
+        Dim opening As Currency
+        Dim high As Currency
+        Dim low As Currency
+        Dim closing As Currency
+        Dim volume As Long
+        
+        lastrow = Cells(Rows.Count, "A").End(xlUp).Row
+        totalvolume = 0
+        openprice = Cells(2, "C").Value
+        startingpoint = 2
+        
+        For i = 2 To lastrow
+            If Cells(i, "A").Value = Cells(i + 1, "A").Value Then
+                totalvolume = totalvolume + Cells(i, "G").Value
+            Else
+                totalvolume = totalvolume + Cells(i, "G").Value
+                closeprice = Cells(i, "F").Value
+                yearlychange = closeprice - openprice
+                percentagechange = yearlychange / openprice * 100
+                
+                Cells(startingpoint, "I").Value = Cells(i, "A").Value
+                Cells(startingpoint, "J").Value = yearlychange
+                Cells(startingpoint, "K").Value = "%" & percentagechange
+                Cells(startingpoint, "L").Value = totalvolume
+                
+                If yearlychange > 0 Then
+                    Range("J" & startingpoint).Interior.Color = vbGreen
+                ElseIf yearlychange < 0 Then
+                    Range("J" & startingpoint).Interior.Color = vbRed
+                Else
+                    Range("J" & startingpoint).Interior.Color = vbWhite
+                End If
+                
+                totalvolume = 0
+                openprice = Cells(i + 1, "C").Value
+                startingpoint = startingpoint + 1
+                
+            End If
+            
+        
+        Next i
+        
+        
+    Next ws
+    
+End Sub
+
+Sub greatest()
+
+    For Each ws In Worksheets
+        ws.Activate
+        
+        'create names
+        Range("O2").Value = "Greatest % Increase"
+        Range("O3").Value = "Greatest % Decrease"
+        Range("O4").Value = "Greatest Total Volume"
+        Range("P1").Value = "Ticker"
+        Range("Q1").Value = "Value"
+
+        Dim k As Integer
+        
+        'autofit the names
+        Columns("O:Q").AutoFit
+        Columns("P").AutoFit
+
+        lastrow = Cells(Rows.Count, "I").End(xlUp).Row
+        totalvolume = 0
+        yearlychange = Cells(2, "K").Value
+        startingpoint = 2
+        
+        'function for greatest increase
+        Range("Q2") = "%" & WorksheetFunction.Max(Range("K2:K" & lastrow)) * 100
+        increase_number = WorksheetFunction.Match(WorksheetFunction.Max(Range("K2:K" & lastrow)), Range("K2:K" & lastrow), 0)
+        Range("P2") = Cells(increase_number + 1, 9)
+        
+        'functions for greatest decrease
+        Range("Q3") = "%" & WorksheetFunction.Min(Range("K2:K" & lastrow)) * 100
+        decrease_number = WorksheetFunction.Match(WorksheetFunction.Min(Range("K2:K" & lastrow)), Range("K2:K" & lastrow), 0)
+        Range("P3") = Cells(decrease_number + 1, 9)
+        
+        'functions for total volume
+        Range("Q4") = WorksheetFunction.Max(Range("L2:L" & lastrow)) * 100
+        total_volume = WorksheetFunction.Match(WorksheetFunction.Max(Range("L2:L" & lastrow)), Range("L2:L" & lastrow), 0)
+        Range("P4") = Cells(total_volume + 1, 9)
+
+
+    Next ws
+    
+    MsgBox ("complete")
+    
+End Sub
