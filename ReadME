@@ -1,0 +1,11 @@
+I had 1 tutoring session and AskBCS a couple of times to help perfect some portions of my code used throughtout the challenge:
+
+  If Cells(i, "A").Value = Cells(i + 1, "A").Value Then
+                totalvolume = totalvolume + Cells(i, "G").Value
+  Range("Q2") = "%" & WorksheetFunction.Max(Range("K2:K" & lastrow)) * 100
+        increase_number = WorksheetFunction.Match(WorksheetFunction.Max(Range("K2:K" & lastrow)), Range("K2:K" & lastrow), 0)
+        Range("P2") = Cells(increase_number + 1, 9)
+
+
+https://learn.microsoft.com/en-us/office/vba/api/overview/excel used to understand functions and other definitions used in the code
+
